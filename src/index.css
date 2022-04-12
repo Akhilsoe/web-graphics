@@ -35,6 +35,9 @@
   h3:not(:first-child) {
     @apply mt-9 mb-1;
   }
+  code {
+    @apply font-mono;
+  }
 }
 
 #root {

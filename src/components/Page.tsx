@@ -85,7 +85,9 @@ export default function Page({ pageName, children }: PageProps) {
           handleQuizStateUpdate: (quizState: QuizState) => {
             handleQuizStateUpdate(quizIndex, quizState);
           },
-          initialQuizState: quizStates[quizIndex],
+          initialQuizState: quizStates[quizIndex]
+            ? quizStates[quizIndex]
+            : QuizAnswerState.Unanswered,
         });
       }
       return child;
@@ -112,7 +114,9 @@ export default function Page({ pageName, children }: PageProps) {
   if (isLoading === false) {
     return (
       <div id="page">
-        {quizStates.length > 0 && <h3>Progress: {progressPercentage}%</h3>}
+        {quizStates.length > 0 && (
+          <h3>Progress: {progressPercentage.toFixed(2)}%</h3>
+        )}
         {getchildrenWithProps()}
       </div>
     );

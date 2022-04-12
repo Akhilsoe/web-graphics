@@ -46,6 +46,13 @@ export default function Quiz({
 
   const SubmitHandler = (event: any) => {
     event.preventDefault();
+    // Unanswered
+    if (currentSelection === undefined) {
+      return;
+    }
+
+    console.log(currentSelection);
+
     const isCorrect = quizInfo.answerIndex === currentSelection;
     setQuizState({
       answerState: isCorrect
@@ -87,7 +94,7 @@ export default function Quiz({
                 name="quiz"
                 value={option}
               />
-              {option}
+              <span>{option}</span>
             </label>
           );
         })}
