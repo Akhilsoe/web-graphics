@@ -4,7 +4,9 @@ import {
   Euler,
   OrthographicCamera,
   PerspectiveCamera,
+  ReinhardToneMapping,
   Scene,
+  sRGBEncoding,
   Vector3,
   WebGLRenderer,
 } from "three";
@@ -26,6 +28,7 @@ interface GraphicsSceneProps {
   children?: React.ReactNode;
   enableAntiAliasing?: boolean;
   enableXR?: boolean;
+  enableShadows?: boolean;
 }
 
 export default function GraphicsScene({
@@ -39,6 +42,7 @@ export default function GraphicsScene({
   children,
   enableAntiAliasing = true,
   enableXR = false,
+  enableShadows = false,
 }: GraphicsSceneProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
@@ -48,8 +52,15 @@ export default function GraphicsScene({
     const renderer = new WebGLRenderer({ antialias: enableAntiAliasing });
     renderer.xr.enabled = enableXR;
     renderer.xr.setReferenceSpaceType("local");
+    if (enableShadows) {
+      renderer.physicallyCorrectLights = true;
+      renderer.outputEncoding = sRGBEncoding;
+      renderer.shadowMap.enabled = true;
+      renderer.toneMapping = ReinhardToneMapping;
+    }
 
     let onMountResize = () => {};
+    let requestAnimationHandle: number;
 
     if (current_mount) {
       let sceneCamera: OrthographicCamera | PerspectiveCamera;
@@ -115,7 +126,7 @@ export default function GraphicsScene({
           update(time);
         }
         renderer.render(scene, sceneCamera);
-        requestAnimationFrame(updateRender);
+        requestAnimationHandle = requestAnimationFrame(updateRender);
       };
 
       onMountResize = () => {
@@ -148,6 +159,10 @@ export default function GraphicsScene({
     // Cleanup
     return () => {
       if (current_mount) {
+        if (requestAnimationHandle) {
+          cancelAnimationFrame(requestAnimationHandle);
+        }
+        renderer.dispose();
         current_mount.removeChild(renderer.domElement);
       }
       window.removeEventListener("resize", onMountResize);
@@ -162,6 +177,7 @@ export default function GraphicsScene({
     camera,
     enableAntiAliasing,
     enableXR,
+    enableShadows,
   ]);
 
   const controlsClassName =
