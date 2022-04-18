@@ -24,8 +24,6 @@ import Projection from "./components/pages/Projection/Projection";
 import Transformations from "./components/pages/Transformations/Transformations";
 import ShadingModels from "./components/pages/ShadingModels/ShadingModels";
 import Textures from "./components/pages/Textures/Textures";
-import Shaders from "./components/pages/Shaders/Shaders";
-import Misc from "./components/pages/Misc/Misc";
 import Illumination from "./components/pages/Illumination/Illumination";
 
 function App(): JSX.Element {
@@ -70,7 +68,14 @@ function App(): JSX.Element {
   }
 
   if (!isAuthenticated && firebaseAuth && showAuthPage) {
-    return <Authentication firebaseAuth={firebaseAuth} />;
+    return (
+      <Authentication
+        firebaseAuth={firebaseAuth}
+        cancelAuthentication={() => {
+          setShowAuthPage(false);
+        }}
+      />
+    );
   }
 
   return (
@@ -97,8 +102,6 @@ function App(): JSX.Element {
               <Route path="shadingModels" element={<ShadingModels />} />
               <Route path="illumination" element={<Illumination />} />
               <Route path="textures" element={<Textures />} />
-              <Route path="shaders" element={<Shaders />} />
-              <Route path="misc" element={<Misc />} />
             </Route>
           </Routes>
         </FirebaseAuthContext.Provider>

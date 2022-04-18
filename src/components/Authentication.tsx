@@ -6,8 +6,10 @@ import { GoogleAuthProvider, EmailAuthProvider, Auth } from "firebase/auth";
 
 export default function Authentication({
   firebaseAuth,
+  cancelAuthentication,
 }: {
   firebaseAuth: Auth;
+  cancelAuthentication: () => void;
 }) {
   // const firebaseAuth = React.useContext(FirebaseAuthContext);
 
@@ -25,8 +27,11 @@ export default function Authentication({
 
   return (
     <div id="authDiv">
-      <h1 id="authHeading">Computer Graphics Learning Platform</h1>
+      <h1 id="authHeading">3D Computer Graphics Learning Platform</h1>
       <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebaseAuth} />
+      <button id="cancelButton" onClick={cancelAuthentication}>
+        Cancel
+      </button>
     </div>
   );
 }
